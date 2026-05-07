@@ -1,0 +1,116 @@
+import hashlib
+
+def brute_force_md5():
+    # Kırılmak istenen hedef MD5 özeti (Bu özet "1234" şifresine aittir)
+    hedef_hash = "81dc9bdb52d04dc20036dbd8313ed055"
+
+    print("Brute force (Kaba kuvvet) şifre kırma işlemi başlatıldı...\n")
+
+    # 0000'dan 9999'a kadar tüm olasılıkları tek tek deniyoruz
+    for i in range(10000):
+        # Sayıyı 4 haneli metne (string) çeviriyoruz (Örn: 5 rakamı -> "0005" olur)
+        denenen_sifre = str(i).zfill(4)
+
+        # Denenen şifrenin MD5 özetini (hash) alıyoruz.
+        # hashlib kütüphanesi byte formatında veri kabul ettiği için önce .encode() kullanıyoruz.
+        uretilen_hash = hashlib.md5(denenen_sifre.encode()).hexdigest()
+
+        # Ürettiğimiz özet ile kırmaya çalıştığımız hedef özet aynı mı diye kontrol ediyoruz
+        if uretilen_hash == hedef_hash:
+            print(f"[+] Başarılı! Hash çözümlendi.")
+            print(f"[+] Orijinal Şifre: {denenen_sifre}")
+            return # Şifreyi bulduğumuz için döngüyü ve fonksiyonu sonlandırıyoruz
+
+    print("[-] Şifre bu aralıkta bulunamadı.")
+
+# Kodu çalıştır
+brute_force_md5()
+
+
+
+
+
+————————————————————————————————————————————————
+
+import hashlib
+import itertools
+import string
+
+gizli_metin = "abc"
+
+karakter_seti = string.ascii_lowercase
+
+maks_uzunluk = 4
+
+hedef_hash = hashlib.md5(gizli_metin.encode()).hexdigest()
+print(f"Kırılacak hash: {hedef_hash}")
+
+deneme = 0
+bulundu = False
+
+for uzunluk in range(1, maks_uzunluk + 1):
+
+    if bulundu:
+        break
+
+    for kombinasyon in itertools.product(karakter_seti, repeat=uzunluk):
+
+        aday = ''.join(kombinasyon)
+        deneme += 1
+
+        aday_hash = hashlib.md5(aday.encode()).hexdigest()
+
+        if aday_hash == hedef_hash:
+            print(f"Bulundu! '{aday}' -- {deneme} denemede cozuldu.")
+            bulundu = True
+            break
+
+if not bulundu:
+    print(f"Bulunamadi. ({deneme} deneme yapildi)")
+
+
+————————————————————————————————————————————————
+
+
+import hashlib
+import itertools
+import string
+
+# 1. Hocanın quizde size vereceği hedef kelime
+hedef_kelime = "siber"
+
+# Hedef kelimenin MD5 özetini arka planda sistem kendisi hesaplıyor
+hedef_hash = hashlib.md5(hedef_kelime.encode()).hexdigest()
+print(f"[*] Aranan hash oluşturuldu: {hedef_hash}\n")
+
+# 2. Denemelerde kullanılacak karakter seti (a'dan z'ye küçük harfler)
+karakterler = string.ascii_lowercase 
+
+print("[*] Saf Brute Force başlatıldı. Tüm harf kombinasyonları üretiliyor...\n")
+
+bulundu = False
+
+# 3. Kelimenin kaç harfli olduğunu bilmediğimizi varsayarak, 
+# 1 harfliden başlayıp 5 harfliye kadar tüm ihtimalleri sırayla deniyoruz.
+# (Eğer kelime daha uzunsa range(1, 6) kısmını büyütebilirsin)
+for uzunluk in range(1, 6):
+    print(f"--- {uzunluk} karakterli kombinasyonlar deneniyor ---")
+    
+    # itertools.product, verdiğimiz karakterlerle 'uzunluk' kadar tüm permütasyonları üretir
+    for kombinasyon in itertools.product(karakterler, repeat=uzunluk):
+        
+        # Üretilen ('s', 'i', 'b', 'e', 'r') gibi yapıyı "siber" kelimesine çeviriyoruz
+        denenen_kelime = "".join(kombinasyon)
+        
+        # [span_0](start_span)Ürettiğimiz kelimenin MD5 özetini alıyoruz[span_0](end_span)
+        uretilen_hash = hashlib.md5(denenen_kelime.encode()).hexdigest()
+        
+        # Hedef hash ile ürettiğimiz hash eşleşiyor mu?
+        if uretilen_hash == hedef_hash:
+            print(f"\n[+] BAŞARILI! Eşleşme bulundu.")
+            print(f"[+] Çözülen Kelime: {denenen_kelime}")
+            bulundu = True
+            break # Eşleşme bulunca içteki döngüyü kırıyoruz
+            
+    if bulundu:
+        break # İçeride bulduğumuz için dıştaki döngüyü de tamamen bitiriyoruz
