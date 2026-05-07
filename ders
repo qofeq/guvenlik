@@ -1,31 +1,30 @@
 import hashlib
+import string
+import itertools
 
-def brute_force_md5():
-    # Kırılmak istenen hedef MD5 özeti (Bu özet "1234" şifresine aittir)
-    hedef_hash = "81dc9bdb52d04dc20036dbd8313ed055"
+def bulcam (hedef_hash):
 
-    print("Brute force (Kaba kuvvet) şifre kırma işlemi başlatıldı...\n")
+karakterler = string.ascii_lowercase + string.digits
 
-    # 0000'dan 9999'a kadar tüm olasılıkları tek tek deniyoruz
-    for i in range(10000):
-        # Sayıyı 4 haneli metne (string) çeviriyoruz (Örn: 5 rakamı -> "0005" olur)
-        denenen_sifre = str(i).zfill(4)
+for tahmin_tuple in itertools.product (karakterler, repeat =4):
 
-        # Denenen şifrenin MD5 özetini (hash) alıyoruz.
-        # hashlib kütüphanesi byte formatında veri kabul ettiği için önce .encode() kullanıyoruz.
-        uretilen_hash = hashlib.md5(denenen_sifre.encode()).hexdigest()
+denenen_sifre = "".join(tahmin_tuple)
 
-        # Ürettiğimiz özet ile kırmaya çalıştığımız hedef özet aynı mı diye kontrol ediyoruz
-        if uretilen_hash == hedef_hash:
-            print(f"[+] Başarılı! Hash çözümlendi.")
-            print(f"[+] Orijinal Şifre: {denenen_sifre}")
-            return # Şifreyi bulduğumuz için döngüyü ve fonksiyonu sonlandırıyoruz
+uretilen_hash = hashlib.sha256 (denenen_sifre.encode()).hexdigest()
 
-    print("[-] Şifre bu aralıkta bulunamadı.")
+if uretilen_hash == hedef_hash:
 
-# Kodu çalıştır
-brute_force_md5()
+return denenen_sifre
 
+return "ehe"
+
+"115a"
+
+verilen_sifre = hashlib.sha256("115a".encode()).hexdigest()
+
+print("verilen:", verilen_sifre)
+
+print("sonuc bu:" bulcam(verilen_sifre))
 
 
 
