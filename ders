@@ -2,29 +2,34 @@ import hashlib
 import string
 import itertools
 
-def bulcam (hedef_hash):
 
-karakterler = string.ascii_lowercase + string.digits
+def bulcam(hedef_hash):
+    # küçük harfler + rakamlar
+    karakterler = string.ascii_lowercase + string.digits
 
-for tahmin_tuple in itertools.product (karakterler, repeat =4):
+    # 4 karakterli bütün ihtimalleri deniyoruz
+    for tahmin_tuple in itertools.product(karakterler, repeat=4):
 
-denenen_sifre = "".join(tahmin_tuple)
+        # tuple olarak gelen karakterleri string yapıyoruz
+        denenen_sifre = "".join(tahmin_tuple)
 
-uretilen_hash = hashlib.sha256 (denenen_sifre.encode()).hexdigest()
+        # denenen şifrenin sha256 hash değerini üretiyoruz
+        uretilen_hash = hashlib.sha256(denenen_sifre.encode()).hexdigest()
 
-if uretilen_hash == hedef_hash:
+        # üretilen hash hedef hash ile aynı mı kontrol ediyoruz
+        if uretilen_hash == hedef_hash:
+            return denenen_sifre
 
-return denenen_sifre
+    # bulunamazsa bunu döndürür
+    return "ehe"
 
-return "ehe"
 
-"115a"
-
+# test için 115a'nın hash değerini üretiyoruz
 verilen_sifre = hashlib.sha256("115a".encode()).hexdigest()
 
 print("verilen:", verilen_sifre)
 
-print("sonuc bu:" bulcam(verilen_sifre))
+print("sonuc bu:", bulcam(verilen_sifre))
 
 
 
